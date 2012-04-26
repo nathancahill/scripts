@@ -1,0 +1,16 @@
+#!/usr/bin/perl
+
+$gv = `/usr/local/bin/wget -q https://www.google.com/voice/m/i/unread --load-cookies '/Library/Application Support/Google Voice Notifier/cookies.txt' --no-check-certificate -O-`;
+
+for (split /^/, $gv) {
+if( $_ =~ "/contact/.*>(.*)<") {
+$nextname = $1;
+}
+
+if( $_ =~ "<span class=\"ms\">\Q(\E(.*) seconds" ) {
+if ($1 < 45) {
+system "/usr/local/bin/growlnotify -n 'Google Voice' --image '/Library/Application Support/Google Voice Notifier/gv-icon.png' -m 'New message from $nextname' -s -t 'Google Voice'"
+}
+}
+
+}
